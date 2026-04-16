@@ -13,6 +13,10 @@
 # Highlight text on webpage, right-click, run AI script, load response into paste clipboard
 
 import ollama
+from GUI import Window
+
+# Init GUI
+Window()    # need to run the AI concurrently with the GUI
 
 # Init ollama client
 client = ollama.Client()
