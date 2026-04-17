@@ -1,6 +1,8 @@
 # setup a GUI for interacting with local LLM
 
 import tkinter as tk
+from tkinter import filedialog
+import pypdf
 
 class Window:
     def __init__(self):
@@ -8,6 +10,9 @@ class Window:
         self.root.title("Local LLM RAG System")
         self.root.geometry("600x500")
 
+        # --- Data Variables ---
+        self.loaded_file_data = ""
+        
         # --- Button Bar (top) ---
         btn_frame = tk.Frame(self.root)
         btn_frame.pack(side="top", fill="x", padx=10, pady=5)
@@ -42,7 +47,27 @@ class Window:
         self.output.config(state="disabled")
 
     def load_file(self):
+        # 1. I need to open and choose the right file
+        # 2. Save file to class variable
+        # 3. I'd like to show that a file is loaded?
         self.write_output("[Load File clicked]\n")
+        filepath = filedialog.askopenfilename()
+        print(filepath)
+
+        if (filepath.endswith(".pdf")):
+            with open(filepath, "rb") as f:
+                reader = pypdf.PdfReader(f)
+                content = ""
+                for page in reader.pages:
+                    content += page.extract_text()
+                print(content)
+                self.loaded_file_data = content
+        else:
+            with open(filepath, "r") as f:
+                content = f.read()
+                print(content)
+                self.loaded_file_data = content
+
 
     def settings(self):
         self.write_output("[Settings clicked]\n")
