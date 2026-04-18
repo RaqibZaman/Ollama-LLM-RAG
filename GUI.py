@@ -43,13 +43,19 @@ class Window:
         self.root.mainloop()
 
     def send(self):
-        prompt_text = self.input.get("1.0", "end").strip()
-        if not prompt_text:
+        input_text = self.input.get("1.0", "end").strip()
+        prompt_text = input_text
+        if not input_text:
             return
         # use LLM to generate response from user_text
+
+        # basic implementation of RAG, but there is a better way to do this I believe using embedding
+        if self.loaded_file_data:
+            prompt_text += " " + self.loaded_file_data
+
         output_text = self.llama.generate(prompt_text)
         
-        self.write_output(f"You: {prompt_text}\nLLM: {output_text}\n\n")
+        self.write_output(f"You: {input_text}\nLLM: {output_text}\n\n")
         self.input.delete("1.0", "end")
 
     def clear(self):
@@ -61,7 +67,7 @@ class Window:
         # 1. I need to open and choose the right file
         # 2. Save file to class variable
         # 3. I'd like to show that a file is loaded?
-        self.write_output("File Loaded\n")
+        self.write_output("[File Loaded]\n")
         filepath = filedialog.askopenfilename()
         print(filepath)
 
