@@ -12,24 +12,27 @@
 # tkinter gui?
 # Highlight text on webpage, right-click, run AI script, load response into paste clipboard
 
-import ollama
+from LoadOLlama import OllamaLoader
 from GUI import Window
 
 # Init GUI
-Window()    # need to run the AI concurrently with the GUI
+llama = OllamaLoader()
+Window(llama)    # need to run the AI concurrently with the GUI
 
-# Init ollama client
-client = ollama.Client()
 
-# Define model and input prompt
 
-#model = "deepseek-r1:8b" # takes 10-12 seconds to load to memory
-#model = "qwen3.5:4b"    # this model thinks WAAAY to much. Is trash.
-model = "deepseek-r1:1.5b"  # this one is perfect for quick jobs, doesn't take too long at all.
-prompt = "What is Python?"
+# # Init ollama client
+# client = ollama.Client()
 
-# Send query to model
-response = client.generate(model=model, prompt=prompt)
+# # Define model and input prompt
 
-print("Response from Ollama:")
-print(response.response)
+# #model = "deepseek-r1:8b" # takes 10-12 seconds to load to memory
+# #model = "qwen3.5:4b"    # this model thinks WAAAY to much. Is trash.
+# model = "deepseek-r1:1.5b"  # this one is perfect for quick jobs, doesn't take too long at all.
+# prompt = "What is Python?"
+
+# # Send query to model
+# response = client.generate(model=model, prompt=prompt)
+
+# print("Response from Ollama:")
+# print(response.response)

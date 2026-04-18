@@ -5,10 +5,12 @@ from tkinter import filedialog
 import pypdf
 
 class Window:
-    def __init__(self):
+    def __init__(self, llama):
+        self.llama = llama
+        
         self.root = tk.Tk()
         self.root.title("Local LLM RAG System")
-        self.root.geometry("600x500")
+        self.root.geometry("600x700")
 
         # --- Data Variables ---
         self.loaded_file_data = ""
@@ -17,7 +19,6 @@ class Window:
         btn_frame = tk.Frame(self.root)
         btn_frame.pack(side="top", fill="x", padx=10, pady=5)
 
-        tk.Button(btn_frame, text="Send",       command=self.send).pack(side="left", padx=4)
         tk.Button(btn_frame, text="Clear",      command=self.clear).pack(side="left", padx=4)
         tk.Button(btn_frame, text="Load File",  command=self.load_file).pack(side="left", padx=4)
         tk.Button(btn_frame, text="Settings",   command=self.settings).pack(side="left", padx=4)
@@ -27,18 +28,28 @@ class Window:
         self.output = tk.Text(self.root, state="disabled", wrap="word")
         self.output.pack(fill="both", expand=True, padx=10, pady=(0, 5))
 
-        # --- Input Box (bottom, fixed height) ---
-        tk.Label(self.root, text="Input:").pack(anchor="w", padx=10)
-        self.input = tk.Text(self.root, height=5, wrap="word")
-        self.input.pack(fill="x", padx=10, pady=(0, 10))
+        # --- Input Box/ Prompt Area (bottom, fixed height) ---
+        prompt_frame = tk.Frame(self.root)
+        prompt_frame.pack(side="bottom", fill="both", padx=10, pady=5)
+
+        tk.Button(prompt_frame, text="Send", command=self.send).pack(side="right", padx=4)
+        
+        tk.Label(prompt_frame, text="Prompt:").pack(anchor="w")
+        self.input = tk.Text(prompt_frame, height=5, wrap="word")
+        self.input.pack(fill="both", pady=(0, 5))
+
+        # --- 
 
         self.root.mainloop()
 
     def send(self):
-        user_text = self.input.get("1.0", "end").strip()
-        if not user_text:
+        prompt_text = self.input.get("1.0", "end").strip()
+        if not prompt_text:
             return
-        self.write_output(f"You: {user_text}\nLLM: (response here)\n\n")
+        # use LLM to generate response from user_text
+        output_text = self.llama.generate(prompt_text)
+        
+        self.write_output(f"You: {prompt_text}\nLLM: {output_text}\n\n")
         self.input.delete("1.0", "end")
 
     def clear(self):
@@ -50,7 +61,7 @@ class Window:
         # 1. I need to open and choose the right file
         # 2. Save file to class variable
         # 3. I'd like to show that a file is loaded?
-        self.write_output("[Load File clicked]\n")
+        self.write_output("File Loaded\n")
         filepath = filedialog.askopenfilename()
         print(filepath)
 
@@ -77,6 +88,3 @@ class Window:
         self.output.insert("end", text)
         self.output.config(state="disabled")
         self.output.see("end")  # auto-scroll to bottom
-
-
-Window()
