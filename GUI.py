@@ -1,7 +1,7 @@
 # setup a GUI for interacting with local LLM
 
 import tkinter as tk
-from tkinter import filedialog
+from tkinter import filedialog, ttk
 import pypdf
 
 class Window:
@@ -14,6 +14,7 @@ class Window:
 
         # --- Data Variables ---
         self.loaded_file_data = ""
+        self.selected_model = tk.StringVar()
         
         # --- Button Bar (top) ---
         btn_frame = tk.Frame(self.root)
@@ -21,7 +22,11 @@ class Window:
 
         tk.Button(btn_frame, text="Clear",      command=self.clear).pack(side="left", padx=4)
         tk.Button(btn_frame, text="Load File",  command=self.load_file).pack(side="left", padx=4)
-        tk.Button(btn_frame, text="Settings",   command=self.settings).pack(side="left", padx=4)
+        # tk.Button(btn_frame, text="Settings",   command=self.settings).pack(side="left", padx=4)
+        dropdown = ttk.Combobox(btn_frame, textvariable=self.selected_model, values=llama.available_models, state="readonly", width=40)
+        dropdown.pack(side="left", padx=4)
+        dropdown.current(0)
+
 
         # --- Output Box (middle, expands) ---
         tk.Label(self.root, text="Output:").pack(anchor="w", padx=10)
