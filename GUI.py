@@ -22,7 +22,7 @@ class Window:
 
         tk.Button(btn_frame, text="Clear",      command=self.clear).pack(side="left", padx=4)
         tk.Button(btn_frame, text="Load File",  command=self.load_file).pack(side="left", padx=4)
-        # tk.Button(btn_frame, text="Settings",   command=self.settings).pack(side="left", padx=4)
+        tk.Button(btn_frame, text="Settings",   command=self.settings).pack(side="left", padx=4)
         dropdown = ttk.Combobox(btn_frame, textvariable=self.selected_model, values=llama.available_models, state="readonly", width=40)
         dropdown.pack(side="left", padx=4)
         dropdown.current(0)
@@ -58,7 +58,7 @@ class Window:
         if self.loaded_file_data:
             prompt_text += " " + self.loaded_file_data
 
-        output_text = self.llama.generate(prompt_text)
+        output_text = self.llama.generate(self.selected_model.get(), prompt_text)
         
         self.write_output(f"You: {input_text}\nLLM: {output_text}\n\n")
         self.input.delete("1.0", "end")
@@ -93,6 +93,7 @@ class Window:
 
     def settings(self):
         self.write_output("[Settings clicked]\n")
+        print(self.selected_model.get())
 
     def write_output(self, text):
         self.output.config(state="normal")

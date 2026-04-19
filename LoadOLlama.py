@@ -16,7 +16,11 @@ class OllamaLoader:
         for model in self.available_models:
             print (model)
 
-    def generate(self, prompt):
-        self.response = self.client.generate(model=self.model, prompt=prompt)
-        self.response_text = self.response.response
+    def generate(self, model, prompt):
+        if model:
+            self.response = self.client.generate(model=model, prompt=prompt)
+            self.response_text = self.response.response
+        else:
+            self.response = self.client.generate(model=self.model, prompt=prompt)
+            self.response_text = self.response.response
         return self.response_text
